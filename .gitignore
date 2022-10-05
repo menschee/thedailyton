@@ -115,4 +115,4 @@ dist
 .idea/
 .vscode/
 tools/dev
-static/mesages.json
+./static/mesages.json
