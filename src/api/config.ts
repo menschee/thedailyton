@@ -1,0 +1,36 @@
+import { TelegramClient } from 'telegram'
+import { StringSession } from 'telegram/sessions'
+
+interface IConfig {
+  port: number
+  telegramApiId: number
+  stringSession: StringSession
+  telegramApiHash: string
+  telegramBotToken: string
+  messagesPoolInterval: number
+  telegramClient?: TelegramClient
+}
+
+export const Config: IConfig = {
+  port: parseInt(process.env.PORT || '8080'),
+  telegramApiId: Number(process.env.API_ID),
+  telegramBotToken: String(process.env.TELEGRAM_BOT_TOKEN),
+  telegramApiHash: String(process.env.API_HASH),
+  // TODO: remove later
+  stringSession: new StringSession(
+    '1AgAOMTQ5LjE1NC4xNjcuNDEBuwjJAqeKGQ4yXgtWkEkIlNv2K/ROsEFVfrNApjNiRfpPnLrvKm+gnFFcNflLNNHjakEIL6YKXZWP5pJ9uXyIUt8bFQPx+7Fg2cx8ds7yxgszd0M31U2G6mVVqPqkz8GhiEZpzlH8kgz8EOHVPgDnaSuJVYfXGH/Xw5XaOlmgoymbhXLu5wAA5mGs3Q6LpCrHpBd+SQ65Eg0JrWr9vZdVbPDZ3cTmgPcSDgpfARWNgE39NUP3vnbBZG4I2DZEcI6mSI0SSGzH8EhDVMntUzf3Y04tZucCtuJW4SMZ1IT8xftfmJjEMB2rPrU+NAd6NACuivYNJlmPJO4wyNHAtVNkGrU=',
+  ),
+  messagesPoolInterval: Number(process.env.MESSAGES_POOL_INTERVAL || 60000)
+}
+
+if (!Config.telegramBotToken) {
+  throw new Error('Please provide new token')
+}
+
+if (!Config.telegramApiId) {
+  throw new Error('Please provide telegram API ID')
+}
+
+if (!Config.telegramApiHash) {
+  throw new Error('Please provide telegram api hash')
+}
