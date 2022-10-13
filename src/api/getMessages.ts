@@ -1,5 +1,5 @@
 import { Api } from 'telegram'
-import { Config } from './config'
+import { Config } from './config.js'
 
 export const getMessages = async () => {
   await Config.telegramClient?.connect()
@@ -11,11 +11,13 @@ export const getMessages = async () => {
       limit: 100,
       maxId: 0,
       minId: 0,
-      //@ts-ignore
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       hash: BigInt('-4156887774564'),
     }),
   )
 
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   return JSON.stringify(result['messages'])
 }
