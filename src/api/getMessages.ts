@@ -28,7 +28,7 @@ export const getMessages = async () => {
   const messagesData = [];
   let createdImages = [];
 
-  const prevMessageData = fs.readFileSync('./static/messages.json')
+  const prevMessageData = fs.readFileSync(`${Config.staticDataPath}/static/messages.json`)
 
   try {
     const stringData = prevMessageData.toString('utf-8');
@@ -46,7 +46,7 @@ export const getMessages = async () => {
     }
 
     if (post.media.className === 'MessageMediaPhoto') {
-      nextMessage.poster = `./images/posts/${post.id}.jpeg`;
+      nextMessage.poster = `/images/posts/${post.id}.jpeg`;
 
       if (!createdImages.includes(post.id)) {
         const result = await Config.telegramClient?.downloadMedia(post.media);
