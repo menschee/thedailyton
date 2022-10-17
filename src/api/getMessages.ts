@@ -28,9 +28,8 @@ export const getMessages = async () => {
   const messagesData = [];
   let createdImages = [];
 
-  const prevMessageData = fs.readFileSync(`${Config.staticDataPath}/static/messages.json`)
-
   try {
+    const prevMessageData = fs.readFileSync(`${Config.staticDataPath}/static/messages.json`)
     const stringData = prevMessageData.toString('utf-8');
     const jsonMessageData = JSON.parse(stringData)
 
