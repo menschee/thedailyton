@@ -6,11 +6,12 @@ import { initUserConnection } from './api/initConection'
 import { storeMessagesData } from './utils'
 
 export default async function main() {
-  await initUserConnection()
-  storeMessagesData(await getMessages())
+  await initUserConnection();
+
+  storeMessagesData(await getMessages());
 
   setInterval(async () => {
-    storeMessagesData(await getMessages())
+    storeMessagesData(await getMessages());
   }, Config.messagesPoolInterval)
 }
 

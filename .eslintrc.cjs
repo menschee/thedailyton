@@ -12,5 +12,6 @@ module.exports = {
     '@typescript-eslint/no-dupe-class-members': ['error'],
     '@typescript-eslint/no-useless-constructor': ['error'],
     '@typescript-eslint/no-inferrable-types': ['off'],
+    '@typescript-eslint/ban-ts-comment': ['off'],
   },
 }

@@ -1,3 +1,5 @@
+import ImageKit from 'imagekit'
+import path from 'path'
 import { TelegramClient } from 'telegram'
 import { StringSession } from 'telegram/sessions'
 
@@ -8,7 +10,8 @@ interface IConfig {
   telegramApiHash: string
   telegramBotToken: string
   messagesPoolInterval: number
-  telegramClient?: TelegramClient
+  telegramClient?: TelegramClient,
+  staticDataPath: string,
 }
 
 export const Config: IConfig = {
@@ -18,7 +21,8 @@ export const Config: IConfig = {
   telegramApiHash: String(process.env.API_HASH),
   // TODO: remove later
   stringSession: new StringSession(process.env.SESSION || '',),
-  messagesPoolInterval: Number(process.env.MESSAGES_POOL_INTERVAL || 60000)
+  messagesPoolInterval: Number(process.env.MESSAGES_POOL_INTERVAL || 60000),
+  staticDataPath: path.resolve(process.env.STATIC_PATH || './static')
 }
 
 if (!Config.telegramBotToken) {

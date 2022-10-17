@@ -1,9 +1,18 @@
+import * as fs from 'fs'
 import { Api } from 'telegram'
 import { Config } from './config.js'
 
+interface Message {
+  message: string,
+  id: string,
+  poster?: string,
+}
+
+// SDK initialization
 export const getMessages = async () => {
   await Config.telegramClient?.connect()
 
+  Config.telegramClient?.setParseMode('html')
   const result = await Config.telegramClient?.invoke(
     new Api.messages.GetHistory({
       peer: 'thedailyton',
@@ -11,13 +20,51 @@ export const getMessages = async () => {
       limit: 100,
       maxId: 0,
       minId: 0,
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       hash: BigInt('-4156887774564'),
     }),
   )
 
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  const messagesData = [];
+  let createdImages = [];
+
+  const prevMessageData = fs.readFileSync('./static/messages.json')
+
+  try {
+    const stringData = prevMessageData.toString('utf-8');
+    const jsonMessageData = JSON.parse(stringData)
+
+    createdImages = jsonMessageData.createdImages || [];
+  } catch (e) {
+  }
+
   // @ts-ignore
-  return JSON.stringify(result['messages'])
+  for (const post of result['messages']) {
+    const nextMessage: Message = {
+      message: post.message,
+      id: post.id,
+    }
+
+    if (post.media.className === 'MessageMediaPhoto') {
+      nextMessage.poster = `./images/posts/${post.id}.jpeg`;
+
+      if (!createdImages.includes(post.id)) {
+        const result = await Config.telegramClient?.downloadMedia(post.media);
+
+        if (result) {
+          try {
+            fs.writeFileSync(`${Config.staticDataPath}/images/posts/${post.id}.jpeg`, result);
+            createdImages.push(post.id);
+          } catch (e) {
+            console.log("INFO: error while writing to the storage")
+          }
+        }
+      }
+    }
+
+    messagesData.push(nextMessage)
+  }
+
+  // @ts-ignore
+  return JSON.stringify({ messages: messagesData, createdImages })
 }

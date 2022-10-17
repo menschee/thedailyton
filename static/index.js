@@ -1,35 +1,37 @@
 function fetchNews() {
-  fetch('./messages.json').then((res) => res.json()).then((parsedResponce) => {
-    parsedResponce.forEach(function(post) {
-      var postData = post.message.split(/\r?\n|\r|\n/g);
+  const postsWrapper = document.querySelector('.posts__wrapper');
 
-      var postHeader = document.createElement('h2')
-      postHeader.innerText = postData.shift()
+  fetch('./messages.json')
+    .then((res) => res.json())
+    .then((parsedResponse) => {
+      parsedResponse.messages.forEach((post) => {
+        const postContainer = document.createElement('div');
+        postContainer.classList.add('post__container');
 
-      var postContent = document.createElement('p');
-      postContent.innerText = postData.join('\n')
+        const postData = post.message.split(/\r?\n|\r|\n/g);
+        const postHeader = document.createElement('h2');
+        const postLink = document.createElement('a');
 
-      var postLink = document.createElement('a')
+        postLink.setAttribute('target', '_blank');
+        postLink.setAttribute('href', 'https://t.me/thedailyton/'+post.id);
+        postLink.innerText = postData.shift();
+        postHeader.appendChild(postLink);
+        postContainer.appendChild(postHeader);
 
-      postLink.setAttribute('target', '_blank')
-      postLink.setAttribute('href', 'https://t.me/thedailyton/'+post.id)
+        if (post.poster) {
+          const postPoster = document.createElement('img');
 
-      postLink.innerText = 'Go to the source'
+          postPoster.setAttribute('src', post.poster);
+          postContainer.appendChild(postPoster)
+        }
 
-      document.querySelector('.posts__wrapper').appendChild(postHeader)
-      document.querySelector('.posts__wrapper').appendChild(postContent)
-      document.querySelector('.posts__wrapper').appendChild(postLink)
+        const postContent = document.createElement('p');
+        postContent.innerText = postData.join('\n');
+        postContainer.appendChild(postContent);
 
-      // const telegramWidget = document.createElement('script')
-      //
-      // telegramWidget.setAttribute('async', true);
-      // telegramWidget.setAttribute('src', 'https://telegram.org/js/telegram-widget.js?19');
-      // telegramWidget.setAttribute('data-telegram-post', 'thedailyton/'+post.id);
-      // telegramWidget.setAttribute('data-width', '100%');
-      //
-      // document.querySelector('.posts__wrapper').appendChild(telegramWidget)
+        postsWrapper.appendChild(postContainer)
+      })
     })
-  })
 }
 
 document.addEventListener("DOMContentLoaded", function () {
